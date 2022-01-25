@@ -1,10 +1,12 @@
 import {useState} from 'react'
+import {useNavigate} from 'react-router-dom'
 import './styles.css'
 
 const Login = ({setUser}) => {
     //once the clicker clicks submit, we will mimick logging in and conditionally render our navbar
     
     const [username, setUsername] = useState('')
+    const navigate = useNavigate()
 
     const handleChange = e => {
         setUsername(e.target.value)
@@ -13,8 +15,12 @@ const Login = ({setUser}) => {
     const handleSubmit = e => {
         e.preventDefault()
         setUser(username)
+
+        //We can use useNavigate from RR to redirect our users to a different component/page
+
+        navigate('/pokemon/list')
     }
-    
+
     return (
         //mx-auto centers the form, p-2 adds padding, m-2 adds margin
         <form className='mx-auto border p-2 m-2' id='login-form' onSubmit={handleSubmit}>

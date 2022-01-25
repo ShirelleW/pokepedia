@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import {useContext} from 'react'
+import { useContext } from 'react'
 import UserContext from '../../contexts/UserContext';
 import { Link } from 'react-router-dom'
 
@@ -23,12 +23,18 @@ const Nav = () => {
                             <li className="nav-item">
                                 <Link className="nav-link active" aria-current="page" to="pokemon/list">Pokemon List</Link>
                             </li>
-                            <li className="nav-item">
-                                <Link className="nav-link" to="login">Login</Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link className="nav-link" to="login">Favorites</Link>
-                            </li>
+                            {
+                                !user
+                                    ?
+                                    <li className="nav-item">
+                                        <Link className="nav-link" to="login">Login</Link>
+                                    </li>
+                                    :
+                                    <li className="nav-item">
+                                        <Link className="nav-link" to="favorites">Favorites</Link>
+                                    </li>
+                            }
+
                         </ul>
                     </div>
                 </div>
