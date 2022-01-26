@@ -52,7 +52,7 @@ const App = () => {
           <Route path='/' element={<Home/>} /> 
           <Route path='login' element={<Login setUser={setUser} />} />
           {/* pokeList = {pokeList} is passing down props to the child component */}
-          <Route path='pokemon/list' element={<PokemonList pokeList={pokeList} />} /> 
+          <Route path='pokemon/list' element={<PokemonList pokeList={pokeList} itemsPerPage={8} />} /> 
         </Routes>
       </UserContext.Provider>
     </div>
