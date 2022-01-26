@@ -6,10 +6,12 @@ import Nav from './components/Nav'
 import UserContext from './contexts/UserContext';
 // pages
 import Login from './pages/Login'
+import PokemonList from './pages/PokemonList';
+import Home from './pages/Home';
 //CSS
 import './App.css';
 
-function App() {
+const App = () => {
   // In order for us to use our context, we import first, then use the useContext hook to access our context
   // const user = useContext(UserContext)
   // console.log(user)
@@ -27,7 +29,9 @@ function App() {
         {/* We need to wrap our all of our Routes inside react router Routes component */}
 
         <Routes>
+          <Route path='/' element={<Home/>} /> 
           <Route path='login' element={<Login setUser={setUser} />} />
+          <Route path='pokemon/list' element={<PokemonList/>} /> 
         </Routes>
       </UserContext.Provider>
     </div>

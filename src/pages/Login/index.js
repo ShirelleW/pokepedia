@@ -17,12 +17,12 @@ const Login = ({setUser}) => {
         setUser(username)
 
         //We can use useNavigate from RR to redirect our users to a different component/page
-
+        //Do not forget the forward slash in the front in navigate()
         navigate('/pokemon/list')
     }
 
     return (
-        //mx-auto centers the form, p-2 adds padding, m-2 adds margin
+        //mx-auto to centers the form, p-2 adds padding, m-2 adds margin
         <form className='mx-auto border p-2 m-2' id='login-form' onSubmit={handleSubmit}>
             <div className="mb-3">
                 <label htmlFor="exampleInputUser1" className="form-label">User address</label>
