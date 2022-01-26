@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 
 const Nav = () => {
     const user = useContext(UserContext)
-    console.log('nav', user)
+    // console.log('nav', user)
 
     // We will use Link from react-router to replace all of our <a> anchor tags. "to" replaces all of our hrefs
 
