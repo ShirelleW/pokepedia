@@ -2,11 +2,12 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate'
 import axios from 'axios'
+import './styles.css'
 
 const PokemonList = ({ pokeList, itemsPerPage }) => {
-    // console.log('props', pokeList)
+  // console.log('props', pokeList)
 
-    // We start with an empty list of pokeList.
+  // We start with an empty list of pokeList.
   const [currentPokemon, setCurrentPokemon] = useState(null);
   const [pageCount, setPageCount] = useState(0);
   // Here we use item offsets; we could also use page offsets
@@ -14,90 +15,105 @@ const PokemonList = ({ pokeList, itemsPerPage }) => {
   const [itemOffset, setItemOffset] = useState(0);
 
 
-    useEffect(() => {
+  useEffect(() => {
 
-        try{
-            // Fetch pokeList from another resources.
-        const endOffset = itemOffset + itemsPerPage;
-        console.log(`Loading pokeList from ${itemOffset} to ${endOffset}`);
+    try {
+      // Fetch pokeList from another resources.
+      const endOffset = itemOffset + itemsPerPage;
+      console.log(`Loading pokeList from ${itemOffset} to ${endOffset}`);
 
-        const pokeURLs = []
+      const pokeURLs = []
 
-        for(let i = itemOffset + 1; i <= endOffset; i++){
-            pokeURLs.push(`https://pokeapi.co/api/v2/pokemon/${i}`)
-        }
-
-        // console.log('urls', pokeURLs)
-        
-        // setCurrentPokemon(pokeList.slice(itemOffset, endOffset));
-        
-        setPageCount(Math.ceil(pokeList.length / itemsPerPage));
-        }catch (error) {
-            console.log(error)
-        } 
-      }, [itemOffset, itemsPerPage]);
-
-      const currPagePokemon = () => {
-          currentPokemon.forEach( async (pokemon) =>{
-               try{
-                    const response = await axios.get(pokemon.url)
-                    console.log(response.data)
-                    setCurrentPokemon()
-               }catch (error) {
-                
-               }
-          })
+      for (let i = itemOffset + 1; i <= endOffset; i++) {
+        pokeURLs.push(`https://pokeapi.co/api/v2/pokemon/${i}`)
       }
 
-      const Pokemon = () => {
-        return (
-          <>
-            {pokeList &&
-              pokeList.map(pokemon => 
-                <div>
-                  {/* <h3>{pokemon.name}</h3> */}
-                </div>
-              )}
-          </>
-        );
-      }
+      // console.log('urls', pokeURLs)
+      currPagePokemon(pokeURLs)
+      // setCurrentPokemon(pokeList.slice(itemOffset, endOffset));
+      const length = pokeList.length ? pokeList.length : 1118
+      setPageCount(Math.ceil(length / itemsPerPage));
+    } catch (error) {
+      console.log(error)
+    }
+  }, [itemOffset, itemsPerPage]);
 
-    // Invoke when user click to request another page.
-    const handlePageClick = (event) => {
-        const newOffset = (event.selected * itemsPerPage) % pokeList.length;
-        console.log(
-            `User requested page number ${event.selected}, which is offset ${newOffset}`
-        );
-        setItemOffset(newOffset);
-    };
+  const currPagePokemon = (pokeURLs) => {
+    try {
+      // axios all() makes all concurrent request. Instead of doing individual request, we can programatically make multiple req.
+      // If one of our Promises fails, the entire request fails
+      const pokeArr = []
+      axios.all(pokeURLs.map(async (url) => {
+        const response = await axios.get(url)
+        // console.log(response.data)
+        pokeArr.push(response.data)
+        // console.log('Poke arr', pokeArr)
+        setCurrentPokemon(pokeArr.flat())
+        //   setCurrentPokemon([...setCurrentPokemon, response.data])
 
-    console.log("current pokemon", currentPokemon)
+      }))
 
+    } catch (error) {
+
+    }
+  }
+
+  const Pokemon = () => {
     return (
-        <div>
-            <Pokemon />
-            <ReactPaginate
-               nextLabel="next >"
-               onPageChange={handlePageClick}
-               pageRangeDisplayed={3}
-               marginPagesDisplayed={2}
-               pageCount={pageCount}
-               previousLabel="< previous"
-               pageClassName="page-item"
-               pageLinkClassName="page-link"
-               previousClassName="page-item"
-               previousLinkClassName="page-link"
-               nextClassName="page-item"
-               nextLinkClassName="page-link"
-               breakLabel="..."
-               breakClassName="page-item"
-               breakLinkClassName="page-link"
-               containerClassName="pagination"
-               activeClassName="active"
-               renderOnZeroPageCount={null}
-            />
-        </div>
+      <div id='pokemon-container'>
+        {
+          currentPokemon &&
+          currentPokemon.map(pokemon => (
+            <div className="card poke-card" key={pokemon.id}>
+              <img src={pokemon.sprites.front_shiny} className="card-img-top" alt="..." />
+              <div className="card-body">
+                <h5 className="card-title">{pokemon.name}</h5>
+                <p className="card-text">Order: {pokemon.id}</p>
+                <a href="#" className="btn btn-primary">Go somewhere</a>
+              </div>
+            </div>
+          ))
+        }
+      </div>
     );
+  }
+
+  // Invoke when user click to request another page.
+  const handlePageClick = (event) => {
+    const newOffset = (event.selected * itemsPerPage) % pokeList.length;
+    console.log(
+      `User requested page number ${event.selected}, which is offset ${newOffset}`
+    );
+    setItemOffset(newOffset);
+  };
+
+  console.log("current pokemon", currentPokemon)
+
+  return (
+    <div>
+      <Pokemon />
+      <ReactPaginate
+        nextLabel="next >"
+        onPageChange={handlePageClick}
+        pageRangeDisplayed={3}
+        marginPagesDisplayed={2}
+        pageCount={pageCount}
+        previousLabel="< previous"
+        pageClassName="page-item"
+        pageLinkClassName="page-link"
+        previousClassName="page-item"
+        previousLinkClassName="page-link"
+        nextClassName="page-item"
+        nextLinkClassName="page-link"
+        breakLabel="..."
+        breakClassName="page-item"
+        breakLinkClassName="page-link"
+        containerClassName="pagination"
+        activeClassName="active"
+        renderOnZeroPageCount={null}
+      />
+    </div>
+  );
 }
 
 export default PokemonList;

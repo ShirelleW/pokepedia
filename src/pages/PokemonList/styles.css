@@ -1,0 +1,11 @@
+#pokemon-container{
+    display: flex;
+    /* helps viewability on smaller screens (like phones) */
+    flex-wrap: wrap;
+    justify-content: center; 
+    gap: 1rem; 
+    margin: 1rem; 
+}
+.poke-card{
+    width: 10rem;
+}
